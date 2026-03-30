@@ -9,6 +9,8 @@
 		<title>abianchi.dev</title>
 	</head>
 	<body class="min-h-dvh bg-[var(--console-bg)] font-mono text-[var(--console-text)] antialiased">
+		<div class="crt-shell" aria-hidden="true"></div>
+		<div class="crt-glass" aria-hidden="true"></div>
 		<slot />
 	</body>
 </html>
@@ -24,11 +26,194 @@
 		--console-accent: #2ecf9c;
 		--console-bright: #7ae8c0;
 		--console-border: rgba(196, 232, 216, 0.12);
+
+		/* CRT overlay tuning */
+		--crt-scanline-opacity: 0.09;
+		--crt-vignette-opacity: 0.48;
+		--crt-glow-opacity: 0.22;
+		--crt-noise-opacity: 0.04;
+		--crt-flicker-opacity: 0.06;
+
+		/* CRT "screen" geometry */
+		--crt-screen-radius: 28px;
+		--crt-screen-inset: clamp(10px, 2.4vw, 28px);
 	}
 
 	html,
 	body {
 		margin: 0;
 		width: 100%;
+	}
+
+	/* Old monitor / CRT console effect (subtle, readable) */
+	body {
+		position: relative;
+		isolation: isolate;
+	}
+
+	/* Darken the "room" a bit like the photo */
+	body {
+		background:
+			radial-gradient(
+				1200px 700px at 50% 15%,
+				rgba(46, 207, 156, 0.08),
+				rgba(0, 0, 0, 0) 60%
+			),
+			var(--console-bg);
+	}
+
+	/* CRT bezel + screen mask (centered "monitor" feeling) */
+	.crt-shell,
+	.crt-glass {
+		position: fixed;
+		inset: 0;
+		pointer-events: none;
+		z-index: 0;
+	}
+
+	.crt-shell {
+		/* Outside dark + inside subtle bezel tint */
+		background:
+			radial-gradient(
+				ellipse at center,
+				rgba(0, 0, 0, 0) 0%,
+				rgba(0, 0, 0, 0) 54%,
+				rgba(0, 0, 0, 0.75) 100%
+			),
+			radial-gradient(
+				1000px 650px at 50% 40%,
+				rgba(232, 214, 186, 0.06),
+				rgba(0, 0, 0, 0) 60%
+			);
+	}
+
+	.crt-glass {
+		/* Everything here is masked to a rounded "screen" rectangle */
+		-webkit-mask: radial-gradient(
+				ellipse at center,
+				#000 0%,
+				#000 65%,
+				rgba(0, 0, 0, 0) 100%
+			),
+			linear-gradient(#000, #000);
+		-webkit-mask-composite: source-in;
+		mask: radial-gradient(
+				ellipse at center,
+				#000 0%,
+				#000 65%,
+				rgba(0, 0, 0, 0) 100%
+			),
+			linear-gradient(#000, #000);
+		mask-composite: intersect;
+	}
+
+	/* A centered rounded screen area */
+	.crt-glass::before,
+	.crt-glass::after {
+		content: "";
+		position: fixed;
+		left: var(--crt-screen-inset);
+		right: var(--crt-screen-inset);
+		top: var(--crt-screen-inset);
+		bottom: var(--crt-screen-inset);
+		border-radius: var(--crt-screen-radius);
+	}
+
+	/* Scanlines + slight RGB shadow */
+	.crt-glass::before {
+		background:
+			/* scanlines */
+			repeating-linear-gradient(
+				to bottom,
+				rgba(0, 0, 0, 0) 0px,
+				rgba(0, 0, 0, 0) 2px,
+				rgba(0, 0, 0, var(--crt-scanline-opacity)) 3px
+			),
+			/* subtle subpixel tint */
+			linear-gradient(
+				90deg,
+				rgba(255, 60, 120, 0.018),
+				rgba(46, 207, 156, 0.0),
+				rgba(80, 160, 255, 0.018)
+			);
+		mix-blend-mode: overlay;
+		opacity: 1;
+	}
+
+	/* Vignette + glow + gentle noise + flicker */
+	.crt-glass::after {
+		background:
+			/* vignette (screen corners) */
+			radial-gradient(
+				ellipse at center,
+				rgba(0, 0, 0, 0) 0%,
+				rgba(0, 0, 0, 0) 48%,
+				rgba(0, 0, 0, var(--crt-vignette-opacity)) 100%
+			),
+			/* phosphor glow */
+			radial-gradient(
+				ellipse at center,
+				rgba(46, 207, 156, var(--crt-glow-opacity)) 0%,
+				rgba(46, 207, 156, 0.02) 45%,
+				rgba(0, 0, 0, 0) 70%
+			),
+			/* glass highlight */
+			linear-gradient(
+				135deg,
+				rgba(255, 255, 255, 0.06) 0%,
+				rgba(255, 255, 255, 0.02) 18%,
+				rgba(255, 255, 255, 0) 35%
+			),
+			/* noise-ish texture (cheap + CSS-only) */
+			repeating-linear-gradient(
+				135deg,
+				rgba(255, 255, 255, var(--crt-noise-opacity)) 0px,
+				rgba(255, 255, 255, var(--crt-noise-opacity)) 1px,
+				rgba(0, 0, 0, 0) 2px,
+				rgba(0, 0, 0, 0) 4px
+			);
+		mix-blend-mode: soft-light;
+		animation: crt-flicker 5.25s infinite steps(1, end);
+		box-shadow:
+			inset 0 0 0 1px rgba(196, 232, 216, 0.08),
+			inset 0 0 40px rgba(0, 0, 0, 0.45),
+			0 22px 70px rgba(0, 0, 0, 0.55);
+	}
+
+	/* Keep your actual content above the overlay */
+	body > * {
+		position: relative;
+		z-index: 1;
+	}
+
+	@keyframes crt-flicker {
+		0%,
+		100% {
+			opacity: 1;
+		}
+		10% {
+			opacity: calc(1 - var(--crt-flicker-opacity));
+		}
+		11% {
+			opacity: 1;
+		}
+		36% {
+			opacity: calc(1 - (var(--crt-flicker-opacity) * 0.55));
+		}
+		37% {
+			opacity: 1;
+		}
+		73% {
+			opacity: calc(1 - (var(--crt-flicker-opacity) * 0.8));
+		}
+		74% {
+			opacity: 1;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.crt-glass::after {
+			animation: none;
+		}
 	}
 </style>
