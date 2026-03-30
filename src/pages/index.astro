@@ -4,6 +4,7 @@ import Hero from "../components/Hero.astro";
 import ConsoleSection from "../components/ConsoleSection.astro";
 import WorkTimeline from "../components/WorkTimeline.astro";
 import WorkTimelineItem from "../components/WorkTimelineItem.astro";
+import ContactSection from "../components/ContactSection.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
@@ -52,10 +53,7 @@ import Layout from "../layouts/Layout.astro";
 		</ConsoleSection>
 
 		<ConsoleSection id="contact" title="Contact" command="open ./contact">
-			<p class="text-[var(--console-muted)]">
-				Coming soon. (This section is here so the hero shortcuts can jump to
-				it.)
-			</p>
+			<ContactSection />
 		</ConsoleSection>
 	</main>
 </Layout>
