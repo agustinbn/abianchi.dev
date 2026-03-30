@@ -1,0 +1,37 @@
+---
+const links = [
+	{ href: "#", label: "home" },
+	{ href: "#work", label: "work" },
+	{ href: "#contact", label: "contact" },
+];
+---
+
+<div class="sticky top-0 z-50 px-4 pt-4 sm:px-6">
+	<header class="mx-auto max-w-4xl backdrop-blur-sm" role="banner">
+		<div
+			class="flex items-center justify-between gap-4 px-4 py-3 font-mono text-sm sm:px-6"
+		>
+			<a href="/" class="flex items-center gap-2 text-green-400 no-underline">
+				<span class="text-green-600/80 select-none" aria-hidden="true">$</span>
+				<span class="tracking-tight">
+					<span class="text-zinc-500">~/</span>abianchi.dev
+				</span>
+			</a>
+			<nav
+				class="flex flex-wrap items-center gap-3 sm:gap-4"
+				aria-label="Primary"
+			>
+				{
+					links.map((link) => (
+						<a
+							href={link.href}
+							class="text-neutral-400 no-underline hover:text-zinc-300"
+						>
+							./{link.label}
+						</a>
+					))
+				}
+			</nav>
+		</div>
+	</header>
+</div>
