@@ -8,13 +8,23 @@
 		<meta name="generator" content={Astro.generator} />
 		<title>abianchi.dev</title>
 	</head>
-	<body class="min-h-dvh bg-black font-mono text-zinc-300 antialiased">
+	<body class="min-h-dvh bg-[var(--console-bg)] font-mono text-[var(--console-text)] antialiased">
 		<slot />
 	</body>
 </html>
 
-<style>
+<style is:global>
 	@import "tailwindcss";
+
+	:root {
+		/* Phosphor-style green terminal — one hue family, readable on deep green-black */
+		--console-bg: #060908;
+		--console-text: #c4e8d8;
+		--console-muted: #5c7569;
+		--console-accent: #2ecf9c;
+		--console-bright: #7ae8c0;
+		--console-border: rgba(196, 232, 216, 0.12);
+	}
 
 	html,
 	body {
