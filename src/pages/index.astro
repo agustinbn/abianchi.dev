@@ -1,11 +1,61 @@
 ---
 import Navbar from "../components/Navbar.astro";
+import Hero from "../components/Hero.astro";
+import ConsoleSection from "../components/ConsoleSection.astro";
+import WorkTimeline from "../components/WorkTimeline.astro";
+import WorkTimelineItem from "../components/WorkTimelineItem.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-	<Navbar />
+	<!-- <Navbar /> -->
 	<main>
-		<!-- <Welcome /> -->
+		<Hero />
+
+		<ConsoleSection id="about" title="About Me" command="cat ./about.txt">
+			<p class="text-[var(--console-muted)] text-justify">
+				Look at my repositories, leave a comment, or contact me to work together
+				on fun projects.
+			</p>
+		</ConsoleSection>
+
+		<ConsoleSection id="work" title="Work" command="ls ./work">
+			<WorkTimeline>
+				<WorkTimelineItem
+					title="Concret0"
+					startMonth="Jan"
+					startYear={2025}
+					description="At Concret0, I help build a real estate management platform for developers, offering real-time unit management, customized reports, interactive data visualization, 3D property exploration, and ongoing usability improvements."
+					links={[
+						{
+							title: "Website",
+							href: "https://www.concret0.com",
+							icon: "external",
+						},
+
+						{
+							title: "Instagram",
+							href: "https://www.instagram.com/concret0.io/",
+							icon: "external",
+						},
+					]}
+				/>
+				<WorkTimelineItem
+					title="InfamesRP"
+					startMonth="Jun"
+					startYear={2021}
+					finishMonth="Jan"
+					finishYear={2022}
+					description="I contributed to InfamesRP, a GTA V roleplay server, where I gained valuable experience in software engineering and team collaboration. This opportunity sparked my passion for development."
+				/>
+			</WorkTimeline>
+		</ConsoleSection>
+
+		<ConsoleSection id="contact" title="Contact" command="open ./contact">
+			<p class="text-[var(--console-muted)]">
+				Coming soon. (This section is here so the hero shortcuts can jump to
+				it.)
+			</p>
+		</ConsoleSection>
 	</main>
 </Layout>

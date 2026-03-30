@@ -1,0 +1,204 @@
+---
+type Month =
+	| "Jan"
+	| "Feb"
+	| "Mar"
+	| "Apr"
+	| "May"
+	| "Jun"
+	| "Jul"
+	| "Aug"
+	| "Sep"
+	| "Oct"
+	| "Nov"
+	| "Dec";
+
+type LinkIcon = "link" | "github" | "external";
+
+type TimelineLink = {
+	title: string;
+	href: string;
+	icon?: LinkIcon;
+};
+
+export type Props = {
+	title: string;
+	startMonth: Month;
+	startYear: number;
+	finishMonth?: Month;
+	finishYear?: number;
+	description: string;
+	links?: TimelineLink[];
+};
+
+const {
+	title,
+	startMonth,
+	startYear,
+	finishMonth,
+	finishYear,
+	description,
+	links = [],
+} = Astro.props;
+
+const periodStart = `${startMonth} ${startYear}`;
+const periodFinish =
+	finishMonth && typeof finishYear === "number"
+		? `${finishMonth} ${finishYear}`
+		: "Present";
+
+const iconClass =
+	"inline-block h-4 w-4 text-[var(--console-muted)] shrink-0 translate-y-[1px]";
+---
+
+<article class="item" role="listitem">
+	<div class="dot" aria-hidden="true"></div>
+
+	<div class="card">
+		<p class="period">
+			<span class="select-none" aria-hidden="true">$</span>
+			<span class="text-[var(--console-muted)]">date</span>
+			<span class="text-[var(--console-muted)]" aria-hidden="true">:</span>
+			<span class="text-[var(--console-text)]">{periodStart}</span>
+			<span class="text-[var(--console-muted)]" aria-hidden="true">—</span>
+			<span class="text-[var(--console-text)]">{periodFinish}</span>
+		</p>
+
+		<h3 class="title">{title}</h3>
+
+		<p class="desc">{description}</p>
+
+		{
+			links.length > 0 && (
+				<div class="links">
+					{links.map((l) => (
+						<a class="link" href={l.href} target="_blank">
+							{l.icon === "github" ? (
+								<svg
+									class={iconClass}
+									viewBox="0 0 24 24"
+									fill="currentColor"
+									aria-hidden="true"
+								>
+									<path d="M12 2C6.477 2 2 6.558 2 12.174c0 4.49 2.865 8.298 6.839 9.643.5.095.682-.22.682-.49 0-.24-.009-.874-.014-1.715-2.782.62-3.369-1.364-3.369-1.364-.454-1.174-1.11-1.486-1.11-1.486-.908-.636.069-.623.069-.623 1.003.072 1.53 1.05 1.53 1.05.892 1.557 2.341 1.107 2.91.846.09-.664.35-1.108.636-1.362-2.22-.26-4.555-1.134-4.555-5.048 0-1.116.389-2.03 1.025-2.746-.103-.26-.444-1.305.098-2.72 0 0 .84-.274 2.75 1.05A9.31 9.31 0 0 1 12 6.844a9.3 9.3 0 0 1 2.504.35c1.909-1.324 2.748-1.05 2.748-1.05.543 1.415.202 2.46.1 2.72.637.716 1.023 1.63 1.023 2.746 0 3.924-2.338 4.785-4.566 5.04.36.315.68.935.68 1.885 0 1.36-.012 2.456-.012 2.79 0 .272.18.589.688.488C19.138 20.468 22 16.66 22 12.174 22 6.558 17.523 2 12 2z" />
+								</svg>
+							) : l.icon === "external" ? (
+								<svg
+									class={iconClass}
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									aria-hidden="true"
+								>
+									<path d="M14 3h7v7" />
+									<path d="M10 14L21 3" />
+									<path d="M21 14v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
+								</svg>
+							) : l.icon === "link" ? (
+								<svg
+									class={iconClass}
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									aria-hidden="true"
+								>
+									<path d="M10 13a5 5 0 0 1 0-7l1.5-1.5a5 5 0 0 1 7 7L17 13" />
+									<path d="M14 11a5 5 0 0 1 0 7L12.5 19.5a5 5 0 0 1-7-7L7 11" />
+								</svg>
+							) : null}
+							<span>{l.title}</span>
+						</a>
+					))}
+				</div>
+			)
+		}
+	</div>
+</article>
+
+<style>
+	.item {
+		position: relative;
+		display: grid;
+		grid-template-columns: 22px 1fr;
+		gap: 14px;
+		align-items: start;
+	}
+
+	.dot {
+		position: relative;
+		margin-left: 5px;
+		margin-top: 8px;
+		height: 12px;
+		width: 12px;
+		border-radius: 999px;
+		background: color-mix(in oklab, var(--console-accent) 65%, transparent);
+		box-shadow: 0 0 0 2px
+			color-mix(in oklab, var(--console-bg) 70%, transparent);
+		border: 1px solid
+			color-mix(in oklab, var(--console-accent) 55%, var(--console-border));
+	}
+
+	.card {
+		border: 1px solid var(--console-border);
+		border-radius: 14px;
+		padding: 14px 14px;
+		background: rgba(196, 232, 216, 0.02);
+	}
+
+	.title {
+		margin: 8px 0 8px 0;
+		font-size: 1.05rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		color: var(--console-bright);
+	}
+
+	.period {
+		margin: 0;
+		font-size: 0.875rem;
+		color: var(--console-muted);
+	}
+
+	.desc {
+		margin: 10px 0 0;
+		color: var(--console-text);
+		line-height: 1.6;
+		white-space: pre-wrap;
+	}
+
+	.links {
+		margin-top: 12px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px 14px;
+	}
+
+	.link {
+		display: inline-flex;
+		align-items: center;
+		gap: 8px;
+		color: var(--console-bright);
+		text-decoration: none;
+		font-size: 0.875rem;
+		border-bottom: 1px dashed transparent;
+		padding-bottom: 1px;
+	}
+
+	.link:hover {
+		color: var(--console-text);
+		border-bottom-color: color-mix(
+			in oklab,
+			var(--console-accent) 55%,
+			transparent
+		);
+	}
+
+	.link:focus-visible {
+		outline: 2px solid var(--console-accent);
+		outline-offset: 3px;
+		border-bottom-color: transparent;
+		border-radius: 6px;
+	}
+</style>

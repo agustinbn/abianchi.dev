@@ -1,0 +1,21 @@
+<div class="timeline" role="list">
+	<slot />
+</div>
+
+<style>
+	.timeline {
+		position: relative;
+		display: grid;
+		gap: 18px;
+	}
+
+	.timeline::before {
+		content: "";
+		position: absolute;
+		left: 10px;
+		top: 6px;
+		bottom: 6px;
+		width: 1px;
+		background: var(--console-border);
+	}
+</style>

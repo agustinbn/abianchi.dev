@@ -1,0 +1,200 @@
+---
+type Shortcut = {
+	label: string;
+	href: string;
+	command: string;
+	description: string;
+};
+
+const shortcuts: Shortcut[] = [
+	{
+		label: "work",
+		href: "#work",
+		command: "cd ./work",
+		description: "Selected projects and roles",
+	},
+	{
+		label: "about",
+		href: "#about",
+		command: "cat ./about.txt",
+		description: "A quick background",
+	},
+	{
+		label: "contact",
+		href: "#contact",
+		command: "open ./contact",
+		description: "Email and socials",
+	},
+];
+---
+
+<section class="px-4 pb-10 pt-6 sm:px-6 sm:pt-10">
+	<div class="mx-auto grid min-h-[calc(100dvh-92px)] max-w-4xl items-center">
+		<div class="console-window">
+			<div
+				class="flex items-center justify-between gap-3 border-b border-[var(--console-border)] px-4 py-3 sm:px-6"
+			>
+				<div class="flex items-center gap-2 text-sm">
+					<span class="select-none text-[var(--console-muted)]" aria-hidden="true"
+						>abianchi.dev@MacBook-Pro</span
+					>
+					<span class="select-none text-[var(--console-muted)]" aria-hidden="true"
+						>:</span
+					>
+					<span class="text-[var(--console-bright)]">~/home</span>
+				</div>
+				<div class="flex items-center gap-2" aria-hidden="true">
+					<span class="h-2.5 w-2.5 rounded-full bg-[var(--console-border)]"></span>
+					<span class="h-2.5 w-2.5 rounded-full bg-[var(--console-border)]"></span>
+					<span class="h-2.5 w-2.5 rounded-full bg-[var(--console-border)]"></span>
+				</div>
+			</div>
+
+			<div class="px-4 py-6 sm:px-6 sm:py-8">
+				<p class="text-sm text-[var(--console-muted)]">
+					<span class="select-none" aria-hidden="true">$</span> whoami
+				</p>
+				<h1 class="mt-2 text-balance text-3xl font-semibold tracking-tight sm:text-5xl">
+					Agustin Bianchi
+				</h1>
+				<p class="mt-3 max-w-prose text-pretty text-[var(--console-muted)]">
+					I build product-minded software with a focus on craft, speed, and pragmatic
+					engineering.
+				</p>
+
+				<div class="mt-6 space-y-2 text-sm">
+					<p>
+						<span class="select-none text-[var(--console-muted)]" aria-hidden="true"
+							>$</span
+						>
+						<span class="text-[var(--console-muted)]">role</span>
+						<span class="text-[var(--console-muted)]" aria-hidden="true">:</span>
+						<span class="text-[var(--console-text)]">Software Engineer</span>
+					</p>
+					<p>
+						<span class="select-none text-[var(--console-muted)]" aria-hidden="true"
+							>$</span
+						>
+						<span class="text-[var(--console-muted)]">now</span>
+						<span class="text-[var(--console-muted)]" aria-hidden="true">:</span>
+						<span class="text-[var(--console-text)]">Building, learning, shipping</span>
+					</p>
+				</div>
+
+				<div class="mt-8">
+					<p class="text-sm text-[var(--console-muted)]">
+						<span class="select-none" aria-hidden="true">$</span> shortcuts
+						<span class="hero-cursor text-[var(--console-bright)]" aria-hidden="true"
+							>▌</span
+						>
+					</p>
+
+					<div class="mt-4 grid gap-3 sm:grid-cols-3">
+						{
+							shortcuts.map((s, idx) => (
+								<a class="shortcut" href={s.href}>
+									<div class="flex items-start justify-between gap-3">
+										<span class="text-sm text-[var(--console-bright)]">
+											[{idx + 1}] ./ {s.label}
+										</span>
+										<span class="kbd" aria-hidden="true">
+											{idx + 1}
+										</span>
+									</div>
+									<p class="mt-2 text-xs text-[var(--console-muted)]">{s.command}</p>
+									<p class="mt-2 text-sm text-[var(--console-text)]">
+										{s.description}
+									</p>
+								</a>
+							))
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.console-window {
+		background: color-mix(in oklab, var(--console-bg) 90%, black 10%);
+		border: 1px solid var(--console-border);
+		border-radius: 14px;
+		box-shadow:
+			0 0 0 1px rgba(46, 207, 156, 0.06),
+			0 20px 60px rgba(0, 0, 0, 0.35);
+		overflow: hidden;
+	}
+
+	.shortcut {
+		display: block;
+		border: 1px solid var(--console-border);
+		border-radius: 12px;
+		padding: 14px 14px;
+		text-decoration: none;
+		background: rgba(196, 232, 216, 0.02);
+		transition:
+			border-color 160ms ease,
+			transform 160ms ease,
+			background-color 160ms ease;
+	}
+
+	.shortcut:hover {
+		border-color: color-mix(in oklab, var(--console-accent) 55%, var(--console-border));
+		background: rgba(46, 207, 156, 0.06);
+		transform: translateY(-1px);
+	}
+
+	.shortcut:focus-visible {
+		outline: 2px solid var(--console-accent);
+		outline-offset: 3px;
+	}
+
+	.kbd {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 2.1em;
+		height: 2.1em;
+		padding: 0 0.35em;
+		border-radius: 0.6em;
+		border: 1px solid var(--console-border);
+		color: var(--console-muted);
+		font-size: 0.75rem;
+		line-height: 1;
+	}
+
+	.hero-cursor {
+		margin-left: 4px;
+		display: inline-block;
+		font-weight: 300;
+		animation: hero-cursor 1.05s step-end infinite;
+		vertical-align: -0.05em;
+	}
+
+	@keyframes hero-cursor {
+		0%,
+		49% {
+			opacity: 1;
+		}
+		50%,
+		100% {
+			opacity: 0;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero-cursor {
+			animation: none;
+			opacity: 1;
+		}
+
+		.shortcut {
+			transition: none;
+		}
+
+		.shortcut:hover {
+			transform: none;
+		}
+	}
+</style>
